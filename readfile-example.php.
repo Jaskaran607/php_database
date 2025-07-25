@@ -1,0 +1,74 @@
+<?php
+// File to read and download
+$filename = "sample.txt";
+
+// Create the file if it doesn't exist
+if (!file_exists($filename)) {
+    file_put_contents($filename, "Welcome to KubeArc Academy!\nThis is a simple text file read using PHP.");
+}
+
+// Handle file download request
+if (isset($_GET['download']) && $_GET['download'] == '1') {
+    if (file_exists($filename)) {
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="' . basename($filename) . '"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($filename));
+        readfile($filename);
+        exit;
+    } else {
+        echo "File not found.";
+        exit;
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PHP readfile() Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background: #f2f2f2;
+        }
+        .content-box {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: auto;
+        }
+        .download-btn {
+            display: inline-block;
+            margin-top: 20px;
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .download-btn:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-box">
+        <h2>📄 File Content:</h2>
+        <div style="background: #f9f9f9; padding: 15px; border: 1px solid #ccc;">
+            <?php
+            // Display file content
+            readfile($filename);
+            ?>
+        </div>
+
+        <a class="download-btn" href="?download=1">⬇️ Download File</a>
+    </div>
+</body>
+</html>
